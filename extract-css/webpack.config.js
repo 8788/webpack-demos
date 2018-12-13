@@ -35,7 +35,7 @@ module.exports = {
   ],
   devServer: {
     host: '127.0.0.1',
-    port: 81,
+    port: 8081,
     contentBase: path.join(__dirname, 'dist'),
     open: true,
     hot: true,
