@@ -1,0 +1,27 @@
+p {
+  color: #f00;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.small-png {
+  background-image: url(./small.png)
+}
+
+.big-png {
+  background-image: url(./big.png)
+}
+
+.small-svg {
+  background-image: url(./small.svg)
+}
+
+.big-svg {
+  background-image: url(./big.svg)
+}
