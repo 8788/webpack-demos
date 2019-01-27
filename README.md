@@ -1,6 +1,21 @@
 # webpack-demos
 demos for webpack4
 
+## How to use
+```bash
+# clone the repository
+git clone git@github.com:8788/webpack-demos.git
+
+# install dependencies
+cd basic/
+npm install
+
+# build for production
+npm run build
+```
+
+## Index
+
 1. [zero-config](./zero-config)
 1. [basic](./basic)
 1. [loader](./loader)
