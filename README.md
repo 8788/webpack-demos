@@ -22,5 +22,8 @@ npm run build
 1. [plugins](./plugins)
 1. [dev-server](./dev-server)
 1. [extract-css](./extract-css)
+1. [image-base64](./image-base64)
+1. [es6+](./es6+)
+1. [lazy-loading](./lazy-loading)
 1. [writing-a-loader](./writing-a-loader)
 1. [writing-a-plugin](./writing-a-plugin)
