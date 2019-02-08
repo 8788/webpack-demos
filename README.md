@@ -27,3 +27,87 @@ npm run build
 1. [lazy-loading](./lazy-loading)
 1. [writing-a-loader](./writing-a-loader)
 1. [writing-a-plugin](./writing-a-plugin)
+
+## zero-config
+
+```javascript
+// package.json
+{
+  // ...
+  "scripts": {
+    "build": "webpack --mode production"
+  },
+  // ...
+}
+```
+
+```bash
+npm run build
+```
+
+## basic
+
+```javascript
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  }
+}
+```
+
+## loader
+
+```javascript
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
+}
+```
+
+## plugins
+```javascript
+// webpack.config.js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    })
+  ]
+}
+```
