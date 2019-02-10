@@ -290,3 +290,224 @@ module.exports = {
   }
 }
 ```
+
+## es6+
+
+```javascript
+// webpack.config.js
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.js$/,
+        use: 'babel-loader'
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    host: '127.0.0.1',
+    port: 8081,
+    contentBase: path.join(__dirname, 'dist'),
+    open: true,
+    hot: true,
+    disableHostCheck: true
+  }
+}
+```
+
+## lazy-loading
+
+```javascript
+// webpack.config.js
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    chunkFilename: '[name].bundle.js',
+    path: path.resolve(__dirname, './dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    host: '127.0.0.1',
+    port: 8081,
+    contentBase: path.join(__dirname, 'dist'),
+    open: true,
+    hot: true,
+    disableHostCheck: true
+  }
+}
+```
+
+## writing-a-loader
+
+```javascript
+// markdown-loader.js
+const marked = require('marked')
+const loaderUtils = require('loader-utils')
+
+module.exports = function (src) {
+  const options = loaderUtils.getOptions(this)
+  this.cacheable()
+  marked.setOptions(options)
+  return marked(src)
+}
+```
+
+```javascript
+// webpack.config.js
+const webpack = require('webpack')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.md$/,
+        use: [
+          'html-loader',
+          {
+            loader: path.resolve('./loader/markdown-loader.js')
+          }
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    host: '127.0.0.1',
+    port: 8081,
+    contentBase: path.join(__dirname, 'dist'),
+    open: true,
+    hot: true
+  }
+}
+```
+
+## writing-a-plugin
+
+```javascript
+// time-plugin.js
+const colors = require('colors')
+
+class TimePlugin {
+  apply (compiler) {
+    compiler.hooks.beforeRun.tap('TimePlugin', () => this.startTime = Date.now())
+    compiler.hooks.done.tapAsync('TimePlugin', (compilation, callback) => {
+      this.endTime = Date.now()
+      callback()
+      console.log(`\nCompile done in: ${this.endTime - this.startTime}ms`.green)
+    })
+  }
+}
+
+module.exports = TimePlugin
+```
+
+```javascript
+// webpack.config.js
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const TimePlugin = require('./plugin/time-plugin.js')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new TimePlugin()
+  ],
+  devServer: {
+    host: '127.0.0.1',
+    port: 8081,
+    contentBase: path.join(__dirname, 'dist'),
+    open: true,
+    hot: true
+  }
+}
+```
